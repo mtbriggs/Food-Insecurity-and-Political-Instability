@@ -1,0 +1,546 @@
+---
+title: "Stats_Summative"
+author: "Briggs"
+date: "11/16/2019"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+## Import Data
+
+```{r}
+library(readxl)
+
+HighGHI <- read_excel("C:/Users/mtbri/OneDrive - Nexus365/Summatives/HighGHI_12_27.xlsx")
+MidGHI <- read_excel("C:/Users/mtbri/OneDrive - Nexus365/Summatives/Mid_GHI_12_27.xlsx")
+```
+
+
+## Summary of variables in HIGH data set
+
+
+```{r}
+summary(HighGHI)
+table(is.na(HighGHI))
+```
+
+## Summary of variables in MID data set
+
+
+```{r}
+summary(MidGHI)
+table(is.na(MidGHI))
+```
+
+## Dropping NAs and making variables numeric 
+
+
+```{r}
+HighGHI_new = HighGHI
+HighGHI_new$Country <- NULL
+
+
+HighGHI_new <- na.omit(HighGHI_new) 
+table(is.na(HighGHI_new))
+
+summary(HighGHI_new)
+
+HighGHI_new$AVG_Dietary_Esupply <- as.numeric(HighGHI_new$AVG_Dietary_Esupply)
+
+HighGHI_new$AVG_Food_Production <- as.numeric(HighGHI_new$AVG_Food_Production)
+
+HighGHI_new$AVG_Protein_Supply <- as.numeric(HighGHI_new$AVG_Protein_Supply)
+
+HighGHI_new$AVG_Protein_Supply_AO <- as.numeric(HighGHI_new$AVG_Protein_Supply_AO)
+
+HighGHI_new$GDP <- as.numeric(HighGHI_new$GDP)
+
+HighGHI_new$Undernourishment <- as.numeric(HighGHI_new$Undernourishment)
+
+HighGHI_new$Cereal_Import_Dependency <- as.numeric(HighGHI_new$Cereal_Import_Dependency)
+
+HighGHI_new$PCT_Arable_Land <- as.numeric(HighGHI_new$PCT_Arable_Land)
+
+HighGHI_new$Imports_vs_Exports <- as.numeric(HighGHI_new$Imports_vs_Exports)
+
+HighGHI_new$Political_Stability <- as.numeric(HighGHI_new$Political_Stability)
+
+HighGHI_new$PC_Food_Production_Variability <- as.numeric(HighGHI_new$PC_Food_Production_Variability)
+
+
+HighGHI_new$PC_Food_Supply_Variability<- as.numeric(HighGHI_new$PC_Food_Supply_Variability)
+
+HighGHI_new$PCT_Basic_Drinking_Water <- as.numeric(HighGHI_new$PCT_Basic_Drinking_Water)
+
+HighGHI_new$PCT_Obesity_18Older <- as.numeric(HighGHI_new$PCT_Obesity_18Older)
+
+HighGHI_new$PCT_Anemia_Women <- as.numeric(HighGHI_new$PCT_Anemia_Women)
+
+```
+
+## Dropping NAs
+
+```{r}
+
+MidGHI_new = MidGHI
+
+
+MidGHI_new <- na.omit(MidGHI_new) 
+table(is.na(MidGHI_new))
+
+summary(MidGHI_new)
+
+
+
+```
+
+
+## Making data numeric for moderate to low GHI levels
+
+```{r}
+MidGHI_new$AVG_Dietary_Esupply <- as.numeric(MidGHI_new$AVG_Dietary_Esupply)
+
+MidGHI_new$AVG_Food_Production <- as.numeric(MidGHI_new$AVG_Food_Production)
+
+MidGHI_new$AVG_Protein_Supply <- as.numeric(MidGHI_new$AVG_Protein_Supply)
+
+MidGHI_new$AVG_Protein_Supply_AO <- as.numeric(MidGHI_new$AVG_Protein_Supply_AO)
+
+MidGHI_new$GDP <- as.numeric(MidGHI_new$GDP)
+
+MidGHI_new$Undernourishment <- as.numeric(MidGHI_new$Undernourishment)
+
+MidGHI_new$Cereal_Import_Dependency <- as.numeric(MidGHI_new$Cereal_Import_Dependency)
+
+MidGHI_new$PCT_Arable_Land <- as.numeric(MidGHI_new$PCT_Arable_Land)
+
+MidGHI_new$Imports_vs_Exports <- as.numeric(MidGHI_new$Imports_vs_Exports)
+
+MidGHI_new$Political_Stability <- as.numeric(MidGHI_new$Political_Stability)
+
+MidGHI_new$PC_Food_Production_Variability <- as.numeric(MidGHI_new$PC_Food_Production_Variability)
+
+
+MidGHI_new$PC_Food_Supply_Variability<- as.numeric(MidGHI_new$PC_Food_Supply_Variability)
+
+MidGHI_new$PCT_Basic_Drinking_Water <- as.numeric(MidGHI_new$PCT_Basic_Drinking_Water)
+
+MidGHI_new$PCT_Obesity_18Older <- as.numeric(MidGHI_new$PCT_Obesity_18Older)
+
+MidGHI_new$PCT_Anemia_Women <- as.numeric(MidGHI_new$PCT_Anemia_Women)
+```
+
+
+## Plots for Exploratory Data Analysis
+
+
+```{r}
+library(ggplot2)
+library(ggthemes)
+library(cowplot)
+
+
+
+p1 <- ggplot(HighGHI_new, aes(x = AVG_Dietary_Esupply, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "Average Dietary Energy Supply") + geom_smooth(method=lm, col= "blue") 
+
+#png(height=400, width=800, filename="ggplots1", type="cairo")
+
+
+p2 <- ggplot(HighGHI_new, aes(x = AVG_Food_Production, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "Average Food Production") + geom_smooth(method=lm, col="blue")
+
+p3 <- ggplot(HighGHI_new, aes(x = PC_Food_Production_Variability, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "Percentage of Food Production Variability") + geom_smooth(method=lm, col="blue")
+
+
+
+p4 <- ggplot(HighGHI_new, aes(x = AVG_Protein_Supply, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "Average Protein Supply") + geom_smooth(method=lm, col="blue")
+
+
+p5 <- ggplot(HighGHI_new, aes(x = AVG_Protein_Supply_AO, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "Average Protein Supply of Animal Origin") + geom_smooth(method=lm, col="blue")
+
+
+p6 <- ggplot(HighGHI_new, aes(x = PC_Food_Supply_Variability, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "Percentage of Food Supply Variability") + geom_smooth(method=lm, col="blue")
+
+p7 <- ggplot(HighGHI_new, aes(x = GDP, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "GDP") + geom_smooth(method=lm, col="blue")
+
+
+p8 <- ggplot(HighGHI_new, aes(x = Cereal_Import_Dependency, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "Cereal Import Dependency") + geom_smooth(method=lm, col="blue")
+
+p9 <- ggplot(HighGHI_new, aes(x = Undernourishment, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "Undernourishment") + geom_smooth(method=lm, col="blue")
+
+
+p10 <- ggplot(HighGHI_new, aes(x = PCT_Arable_Land, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "Percentage of Arable Land") + geom_smooth(method=lm, col="blue")
+
+p11 <- ggplot(HighGHI_new, aes(x = Imports_vs_Exports, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "Imports vs. Exports") + geom_smooth(method=lm, col="blue")
+
+
+p12 <- ggplot(HighGHI_new, aes(x = PCT_Basic_Drinking_Water, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "Percentage of Basic Drinking Water Available") + geom_smooth(method=lm, col="blue")
+
+p13 <- ggplot(HighGHI_new, aes(x = PCT_Obesity_18Older, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "Percentage of Obesity in 18 and Older Individuals") + geom_smooth(method=lm, col="blue")
+
+p14 <- ggplot(HighGHI_new, aes(x = PCT_Anemia_Women, y = Political_Stability)) +
+    geom_point(col = "black") + labs(y= "Political Stability", x= "Percentage of Women with Anemia") + geom_smooth(method=lm, col="blue")
+
+
+
+
+
+plot_grid(p1,p2,p3,p4)
+
+```
+
+
+
+```{r}
+#png(height=400, width=800, filename="ggplots2", type="cairo")
+plot_grid(p5,p6,p7, p8)
+```
+
+
+```{r}
+#png(height=400, width=800, filename="ggplots3", type="cairo")
+plot_grid(p9, p10, p11,p12)
+```
+
+
+```{r}
+#png(height=400, width=800, filename="ggplots4", type="cairo")
+plot_grid(p13,p14)
+```
+
+
+
+## Run various correlations based on plots 
+
+```{r}
+cor(HighGHI_new$Political_Stability, HighGHI_new$GDP)
+```
+
+
+```{r}
+cor(HighGHI_new$Political_Stability, HighGHI_new$PCT_Arable_Land)
+```
+
+
+```{r}
+cor(MidGHI_new$Political_Stability, MidGHI_new$PCT_Arable_Land)
+```
+
+
+
+```{r}
+cor(HighGHI_new$Political_Stability, HighGHI_new$PCT_Anemia_Women)
+```
+
+
+
+## Multicollinearity Checks based on plot below
+
+```{r}
+cor(HighGHI_new$Cereal_Import_Dependency, HighGHI_new$AVG_Food_Production)
+```
+
+
+```{r}
+cor(HighGHI_new$Undernourishment, HighGHI_new$AVG_Protein_Supply)
+```
+
+```{r}
+cor(HighGHI_new$PC_Food_Production_Variability, HighGHI_new$AVG_Food_Production)
+```
+
+
+```{r}
+cor(HighGHI_new$Undernourishment, HighGHI_new$AVG_Dietary_Esupply)
+```
+
+
+```{r}
+cor(HighGHI_new$Cereal_Import_Dependency, HighGHI_new$PCT_Obesity_18Older)
+```
+
+
+## Correlation Plot
+
+```{r}
+
+library(corrplot)
+
+
+HighGHI_cor <- cor(HighGHI_new)
+
+corrplot(HighGHI_cor, tl.col = "black")
+```
+
+
+## Model with all variables 
+
+```{r}
+H_GHI_model= lm(Political_Stability ~ AVG_Dietary_Esupply + AVG_Food_Production + AVG_Protein_Supply + AVG_Protein_Supply_AO + GDP + Undernourishment + Cereal_Import_Dependency + PCT_Arable_Land + Imports_vs_Exports + PC_Food_Production_Variability + PC_Food_Supply_Variability + PCT_Basic_Drinking_Water + PCT_Obesity_18Older + PCT_Anemia_Women, data= HighGHI_new )
+```
+
+
+```{r}
+summary(H_GHI_model)
+```
+
+
+## Best Subset Selection
+
+```{r}
+library(leaps)
+leaps <- regsubsets(Political_Stability ~ AVG_Dietary_Esupply + AVG_Food_Production + 
+    AVG_Protein_Supply + AVG_Protein_Supply_AO + GDP + Undernourishment + 
+    Cereal_Import_Dependency + PCT_Arable_Land + Imports_vs_Exports + 
+    PC_Food_Production_Variability + PC_Food_Supply_Variability + 
+    PCT_Basic_Drinking_Water + PCT_Obesity_18Older + PCT_Anemia_Women, 
+    data = HighGHI_new)
+
+BestAdjR2 = which.max(summary(leaps)$adjr2)
+
+coef(leaps,BestAdjR2)
+```
+
+## Final model
+
+```{r}
+library(ggplot2)
+library(sjPlot)
+
+
+H_GHI_Final <- lm(Political_Stability ~  AVG_Food_Production + AVG_Protein_Supply_AO + GDP +  PCT_Arable_Land  + Imports_vs_Exports +  PCT_Obesity_18Older+ PCT_Anemia_Women, data= HighGHI_new )
+
+
+summary(H_GHI_Final)
+
+tab_model(H_GHI_Final)
+
+
+```
+
+
+
+#Refined model:
+$\widehat{Political Stability} = -.3300 - .001811*AVGFoodProduction - .01860*AVGProteinSupplyAnimalOrigin + .0001013*GDP - .01670PCTArableLand - .001294ImportsVSExports + .03010*PCTObesity18orOlder -.01998*PCTAnemiaWomen$
+
+
+```{r}
+#MSE <-mean(H_GHI_Final$residuals^2)
+#print(MSE)
+```
+
+
+
+
+## Anova between bigger and smaller model
+
+```{r}
+
+anova(H_GHI_Final)
+anova(H_GHI_model)
+
+
+anova(H_GHI_Final, H_GHI_model)
+
+## Adding variables did not lead to a better model fit
+## p>.05 choose reduced model; fail to reject the null which is the smaller model
+```
+
+
+
+
+## Moderate to low GHI model with same variables as final model for High GHI
+
+
+```{r}
+M_GHI_Final <- lm(Political_Stability ~   AVG_Food_Production + AVG_Protein_Supply_AO + GDP +  PCT_Arable_Land  + Imports_vs_Exports +  PCT_Obesity_18Older+ PCT_Anemia_Women, data= MidGHI_new )
+summary(M_GHI_Final)
+
+## Lower R2 than High GHI model
+```
+
+
+
+## Check for Normality of High GHI model
+
+
+```{r}
+library(olsrr)
+
+ols_test_normality(H_GHI_Final)
+ols_test_correlation(H_GHI_Final)
+ols_plot_resid_fit(H_GHI_Final)
+
+```
+
+```{r}
+pdf("Histogram.pdf", width = 7, height =5)
+m <- ols_plot_resid_hist(H_GHI_Final)
+m + theme_grey(base_size = 14)
+```
+
+
+```{r}
+pdf("QQ.pdf", width = 7, height =5)
+n <- ols_plot_resid_qq(H_GHI_Final)
+n + theme_grey(base_size = 14)
+```
+
+
+
+## Load in combined dataset
+
+
+```{r}
+library(readxl)
+
+GHI <- read_excel("C:/Users/mtbri/OneDrive - Nexus365/Summatives/GHI_combined_12_27.xlsx")
+```
+
+
+## Summary of variables and omit missing values 
+
+```{r}
+GHI_new = GHI
+summary(GHI)
+GHI_new <- na.omit(GHI_new) 
+
+```
+
+
+## Plot all countries with varying degrees of undernourishment against levels of political stability
+
+```{r}
+pdf("rplot.pdf", width = 11, height =8)
+```
+
+
+```{r}
+library(ggrepel)
+l <-ggplot(GHI_new, aes(x = Undernourishment, y = Political_Stability, color = High, label = Country) ) + labs(x= "Undernourishment", y= "Political Stability") +
+     geom_point() + geom_text_repel()
+l + theme_grey(base_size = 14)
+dev.off()
+```
+
+
+## Remove country to create linear regression models based on continuous variables
+
+```{r}
+GHI_new$Country <- NULL
+```
+
+
+
+
+## Significant Variable Comparisons with Confidence Intervals
+
+
+```{r}
+Anemia_model_low <- lm(Political_Stability ~  PCT_Anemia_Women, data= MidGHI_new)
+
+confint(Anemia_model_low)
+
+
+Anemia_model_high <- lm(Political_Stability ~  PCT_Anemia_Women, data= HighGHI_new)
+
+confint(Anemia_model_high)
+
+GDP_model_low <- lm(Political_Stability ~  GDP, data= MidGHI_new)
+
+confint(GDP_model_low)
+
+
+GDP_model_high <- lm(Political_Stability ~  GDP, data= HighGHI_new)
+
+confint(GDP_model_high)
+
+
+
+Arable_land_model_low <- lm(Political_Stability ~  PCT_Arable_Land, data= MidGHI_new)
+
+confint(Arable_land_model_low)
+
+
+Arable_land_model_high <- lm(Political_Stability ~ PCT_Arable_Land, data= HighGHI_new)
+
+confint(Arable_land_model_high)
+
+
+```
+
+## Additional Plots to Visualize
+
+```{r}
+#pdf("Combined_1.pdf", width = 7, height =5)
+library(ggplot2)
+
+fitlm = lm(Political_Stability ~  PCT_Anemia_Women, data= MidGHI_new)
+fitlm2 = lm(Political_Stability ~  PCT_Anemia_Women, data= HighGHI_new)
+
+g <- ggplot(GHI_new, aes(x = PCT_Anemia_Women, y = Political_Stability, color = High) ) + labs(y= "Political Stability", x= "Prevalence of Anemia Among Women of Reproductive Age")+
+     geom_point() + geom_abline(slope = fitlm$coefficients[2], intercept = fitlm$coefficients[1], col = "black", size = 1.5) + geom_abline(slope = fitlm2$coefficients[2], intercept = fitlm2$coefficients[1], col = "blue", size =1.5) + geom_smooth(method= lm, se = FALSE, col = "magenta", size = 1.5)
+g + theme_grey(base_size = 14)
+#dev.off()
+  
+
+  
+```
+
+
+```{r}
+#pdf("Combined_2.pdf", width = 7, height =5)
+fitlm = lm(Political_Stability ~  PCT_Arable_Land, data= MidGHI_new)
+fitlm2 = lm(Political_Stability ~  PCT_Arable_Land, data= HighGHI_new)
+
+h <-ggplot(GHI_new, aes(x = PCT_Arable_Land, y = Political_Stability, color = High) ) +labs(y= "Political Stability", x= "Percent of Arable Land Equipped for Irrigation")+
+     geom_point() + geom_abline(slope = fitlm$coefficients[2], intercept = fitlm$coefficients[1], col = "black", size = 1.5) + geom_abline(slope = fitlm2$coefficients[2], intercept = fitlm2$coefficients[1], col = "blue", size =1.5) + geom_smooth(method= lm, se = FALSE, col = "magenta", size = 1.5)
+  
+  
+h + theme_grey(base_size = 14)
+
+#dev.off()
+```
+
+```{r}
+slope = fitlm$coefficients[2]
+slope2 = fitlm2$coefficients[2]
+
+slope-slope2
+```
+
+
+
+```{r}
+#pdf("Combined_3.pdf", width = 7, height =5)
+fitlm = lm(Political_Stability ~  GDP, data= MidGHI_new)
+fitlm2 = lm(Political_Stability ~  GDP, data= HighGHI_new)
+
+j <- ggplot(GHI_new, aes(x = GDP, y = Political_Stability, color = High)) + labs(y= "Political Stability", x= "GDP")+
+     geom_point() + geom_abline(slope = fitlm$coefficients[2], intercept = fitlm$coefficients[1], col = "black", size = 1.5) + geom_abline(slope = fitlm2$coefficients[2], intercept = fitlm2$coefficients[1], col = "blue", size =1.5) + geom_smooth(method= lm, se = FALSE, col = "magenta", size = 1.5)
+  
+j + theme_grey(base_size = 14) 
+  
+#dev.off()
+```
+
